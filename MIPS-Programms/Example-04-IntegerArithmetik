@@ -1,0 +1,81 @@
+		.data
+lf_string: 	.asciiz "\n" 		# Sonderzeichen "neue Zeile"
+eingabeA:	.asciiz "Integer-Zahl A: "
+eingabeB:	.asciiz "Integer-Zahl B: "
+result_sum:	.asciiz "A + B = "
+result_dif:	.asciiz "A - B = "
+result_mul:	.asciiz "A * B = "
+result_div:	.asciiz "A mod B = "
+result_rst:	.asciiz "Rest = "
+error_str:	.asciiz "Division durch Null nicht definiert!\n"
+
+		.text		
+#Prozedur: Ausgabe einer Integer-Zahl mit CR
+print_int:	li $v0, 1
+		syscall
+		la $a0, lf_string
+		li $v0, 4
+		syscall
+		jr $ra
+		
+# Prozedur: Ausgabe eines Strings
+print_str:	li $v0, 4
+		syscall
+		jr $ra
+		
+		.globl main
+main:		subu $sp, $sp, 8 	# Stack Frame ist 8 Bytes
+		sw $ra, 4($sp)		# Sichern der Rücksprungadresse
+		sw $fp, 8($sp)		# Sichern des alten Frame-Pointers
+		addu $fp, $sp, 8	# neuen Frame-Pointer definieren
+		
+		la $a0, eingabeA 	#Integer-Zahl A holen
+		jal print_str
+		li $v0, 5
+		syscall
+		move $s0, $v0		# A in $s0 sichern
+		
+		la $a0, eingabeB 	#Integer-Zahl B holen
+		jal print_str
+		li $v0, 5
+		syscall
+		move $s1, $v0		# B in $s1 sichern
+		
+		la $a0, result_sum 	# Auusgabe A + B
+		jal print_str
+		add $a0, $s0, $s1 	# $a0 = $s0 + $s1
+		jal print_int
+		
+		la $a0, result_dif 	# Auusgabe A - B
+		jal print_str
+		sub $a0, $s0, $s1 	# $a0 = $s0 - $s1
+		jal print_int
+		
+		la $a0, result_mul 	# Auusgabe A * B
+		jal print_str
+		mul $a0, $s0, $s1 	# $a0 = $s0 * $s1
+		jal print_int
+		
+		beqz $s1, error
+		la $a0, result_div	# Auusgabe A mod B
+		jal print_str
+		div $s0, $s1		# LO = $s0 div $s1 (Rest in HI)
+		mflo $a0
+		jal print_int
+		
+		la $a0, result_rst	# Ausgabe des Restes
+		jal print_str
+		mfhi $a0
+		jal print_int
+		b fertig
+		
+error:		la $a0, error_str	# Division durch Null
+		jal print_str
+		
+fertig:		lw $ra, 4($sp)		# Rücksprungadresse wiederherstellen
+		lw $fp, 8($sp)		# Frame-Pointer wiederherstellen
+		addu $sp, $sp, 8	#Stack-Frame löschen
+		jr $ra
+		
+		
+		

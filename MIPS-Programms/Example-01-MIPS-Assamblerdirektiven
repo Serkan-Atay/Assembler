@@ -1,0 +1,12 @@
+	.data			# Es folgen Daten, die im Datensegment stehen
+Note: 	.asciiz "Note"		# String
+PI: 	.float 3.1415		# Konstante
+x: 	.space 4		# Allokiert 4 Bytes im Datensegment
+note: 	.word 0			# Integer mit Vorzeichen
+noten: 	.word 256, 0x100	# 2 Integer ...
+
+	.text			# Es folgt der Programmcode
+	
+	.globl main		# main ist globales Symbol
+	
+main:		

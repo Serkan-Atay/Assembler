@@ -1,0 +1,10 @@
+		.data
+lf_string: 	.asciiz "\n"
+
+		.text
+pr_str:		li $v0, 1		# print_int
+		syscall
+		la $a0, lf_string	# print_string
+		li $v0, 4
+		syscall
+		jr $ra

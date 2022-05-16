@@ -1,0 +1,49 @@
+#Aufgabe 5.1. a) hier können wir die funktionspaare ohne hardcoden benutzen
+
+.data	#5 testcases
+	.word 5		# fünf tests
+	.word 30 25	#testwerte 1.Test
+	.word 210 28	#testwerte 2 
+	.word 49 42
+	.word 17 3
+	.word 17 51
+	
+.text #daten werden mit einer SCHREIFE aus dem .data segment geholt (nacheinander)
+
+	#anzahl der testfälle -> erstes datenwort
+	lui $t0 0x1001		#$t0 ist unser adress register 
+	ori $t0, $t0, 0x0000		#speicherstelle laden von testanzahl
+	 
+	lw $t1, ($t0) 		#anzahl der testcases
+	
+	addi $t3, $0, 0		# init $t3 als laufvariable
+loop:
+	beq $t3,$t1,exit	# Kopf der for Schleife vergleich 
+	addi $t0,$t0, 4		#rücken mit der Speicheradresse 4 byte weiter
+	lw $a0, ($t0)		# läd den ersten Value vom test 1 
+	addi $t0,$t0, 4		# rücken weiter für den nächsten testwert
+	lw $a1, ($t0)		# läd den zweiten Value vom test 1
+	jal ggt		# aufrufen der funktion /algorythmus
+	addi $t3, $t3, 1	# i++
+	j loop			#schleife 
+
+.text 	#für subroutine neues .text feld
+
+ggt:
+	addi $v0,$0,0		#zielreqister auf null
+	beq $a0 ,$0, return 	# if(r4 == 0) jump label10
+test:	
+	beq $a1 ,$0, done 	 # if(r5 == 0) goto (9)
+	addi $a2,$a0,0 		# sichern $4
+	sub $a0,$a0,$a1		# (6) in aufgabe vorgezogen
+	bgez $a0,done		# test auf dif
+	addi $a0, $a2,0
+	sub $a1, $a1, $a0     # else r5 <-- r5 - r4
+	j test			#goto (5)	
+done: 
+	addi $v0,$a0,0 
+return:
+	jr $ra
+exit: 
+	li $v0, 10 
+	syscall

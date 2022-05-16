@@ -1,0 +1,91 @@
+	.text
+	# void strtolower(char *str)
+	# void strturnaround(char *str)
+	# int strispalindrom(char *str)
+	# void strcat(char *result, char *str1, char *str2)
+	
+	# strtolower(str1);
+	# strtolower(str2);
+	# strturnaround(str1);
+	# strturnaround(str2);
+	# strcat(str3,str1,str2);
+	# strispalindrom(str3);
+	
+	
+	lb $1, str1
+	li $22, 0 # COUNTER Reg22 will be iterator, starting at 0
+	
+	
+	li $20, 64 
+	li $21, 91
+	#lb $1, str1 
+	
+	
+
+strtolower:
+
+	add $3, $1, $22
+	slt $10, $3, $21 # Wenn kleiner 91 dann in Reg10 = 1 else Reg10 = 0
+	beq $10, $0, nextchar
+	slt $11, $20, $3
+	beq $11, $0, nextchar
+	j chartolower
+	
+	
+	# If Reg 10 && Reg 11 = 1
+	# then ToLower
+	# eElse NextChgar
+	
+	j end
+	
+	# if $3 >= 65 AND $3 <= 90 (Also Großbuchstabe)
+	# goto chartolower
+	# else Next Char
+
+
+# If Großzeichen (65 + 90) 
+#	then Wert +32
+# 	else Wert = Wert
+chartolower:
+	lb $1, str1      	# Lade ersten Buchstaben ins Register 1
+	addi $3, $1, 32		# Addiere 32 Um Großbuchstaben zu Kleinbuchstaben zu machen
+	sb $3, str1		#Speichere ersten Buchstaben in Str1	
+	
+	j nextchar
+	
+	
+nextchar:
+	addi $22, $22, 1 # i++
+	j strtolower
+	
+				
+				
+	# Load string to register
+	# Check Char
+	# - If Capital = toLower
+	# Check next Char
+	# Save Word
+	
+
+strturnaround:
+
+
+strispalindrom:
+
+strcat:
+
+end:
+	
+
+
+	.data
+	str1: .asciiz "LAger"
+	str2: .asciiz "Regal"
+	str3: .space 10
+	
+	startupper: .word 64 	# int startUpper = 65
+	endupper: .word 91	# int endUpper = 90
+	
+	
+	.byte 0xff
+	.byte 0xff

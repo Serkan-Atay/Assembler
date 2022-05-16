@@ -1,0 +1,8 @@
+	.data
+string:	.asciiz "Hello MIPS-World"
+
+	.text
+	
+	la $a0, string 	#Adresse von string in $a0
+	li $v0, 4
+	syscall		
